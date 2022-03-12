@@ -39,14 +39,25 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1. watch one piece anime' for row in rows)
-        )
+        self.assertIn('1. watch one piece anime', [row.text for row in rows])
+        
         # There is still a text box inviting him to add another item.
+        input_box = self.browser.find_element_by_id('add_new_item')
+        self.assertEqual(
+            input_box.get_attribute('placeholder'),
+            'Enter a to-do item'
+        )
         # He enters "read ttd with python book"
-        self.fail('Finish the test!')
+        input_box.send_keys('read ttd with python book')
+        input_box.send_keys(Keys.ENTER)
+        time.sleep(1.0)
         # The page updates again, and now shows both items on her list
-
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1. watch one piece anime', [row.text for row in rows])
+        self.assertIn('2. read ttd with python book', [row.text for row in rows])        
+        
+        self.fail('Finish the test!')
         # Roark sees that the site generates a unique URl for him
 
         # he visits the url and his to-do lists is still there

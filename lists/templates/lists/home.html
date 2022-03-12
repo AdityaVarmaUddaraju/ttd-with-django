@@ -1,3 +1,11 @@
-<html>
-    <title>To-Do App!!!</title>
-</html>
+<title>To-Do App</title>
+<h1>To-Do App</h1>
+
+<form method="post">
+    <input type="text" id="add_new_item" name="item_text" placeholder="Enter a to-do item">
+    {% csrf_token %}
+</form>
+
+<table id="id_list_table">
+    <tr><td>1. {{ new_item_text }}</td></tr>
+</table>

@@ -12,6 +12,11 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'lists/home.html')
 
+    def test_add_input_item_to_todo_list(self):
+        response = self.client.post('/lists/',data={'item_text': 'a new list item'})
+        self.assertIn('a new list item', response.content.decode())
+        self.assertTemplateUsed(response, 'lists/home.html')
+
 
 
 
