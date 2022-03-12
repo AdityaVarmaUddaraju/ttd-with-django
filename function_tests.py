@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 
 class NewVisitorTest(unittest.TestCase):
@@ -18,18 +20,31 @@ class NewVisitorTest(unittest.TestCase):
 
         # He notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
-        self.fail('Finish the test!')
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do', header_text)
 
         # He is invited to enter a to-do item straight away
-
+        input_box = self.browser.find_element_by_id('add_new_item')
+        self.assertEqual(
+            input_box.get_attribute('placeholder'),
+            'Enter a to-do item'
+        )
         # He types "watch one piece anime" into the text box
+        input_box.send_keys('watch one piece anime')
 
         # When he hits enter, the page updates and lists
         # 1. watch one piece anime
+        input_box.send_keys(Keys.ENTER)
+        time.sleep(1.0)
 
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(row.text == '1. watch one piece anime' for row in rows)
+        )
         # There is still a text box inviting him to add another item.
         # He enters "read ttd with python book"
-
+        self.fail('Finish the test!')
         # The page updates again, and now shows both items on her list
 
         # Roark sees that the site generates a unique URl for him
