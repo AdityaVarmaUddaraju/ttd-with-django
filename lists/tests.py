@@ -2,6 +2,8 @@ from django.test import TestCase, Client
 from django.urls import resolve
 from django.http import HttpRequest
 
+from .models import Item
+
 from .views import home_page
 # Create your tests here.
 class HomePageTest(TestCase):
@@ -17,6 +19,24 @@ class HomePageTest(TestCase):
         self.assertIn('a new list item', response.content.decode())
         self.assertTemplateUsed(response, 'lists/home.html')
 
+class ItemModelTest(TestCase):
+    def test_saving_and_retrieving_items(self):
+        item1 = Item()
+        item1.text = 'first item'
+        item1.save()
+
+        item2 = Item()
+        item2.text = "second item"
+        item2.save()
+
+        total_items = Item.objects.all()
+        self.assertEqual(total_items.count(), 2)
+
+        first_item = total_items[0]
+        second_item = total_items[1]
+
+        self.assertEqual(first_item.text, 'first item')
+        self.assertEqual(second_item.text, 'second item')
 
 
 
