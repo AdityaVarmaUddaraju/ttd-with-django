@@ -1,7 +1,7 @@
 <title>To-Do App</title>
 <h1>Start a new To-Do list</h1>
 
-<form method="POST">
+<form method="POST" action='/lists/new/'>
     <input type="text" id="add_new_item" name="item_text" placeholder="Enter a to-do item">
     {% csrf_token %}
 </form>
