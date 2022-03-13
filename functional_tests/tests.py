@@ -1,3 +1,4 @@
+from tkinter import BROWSE
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -68,10 +69,52 @@ class NewVisitorTest(LiveServerTestCase):
         self.wait_for_row_in_id_list_table('1. watch one piece anime')
         self.wait_for_row_in_id_list_table('2. read ttd with python book')        
         
-        self.fail('Finish the test!')
-        # Roark sees that the site generates a unique URl for him
-
-        # he visits the url and his to-do lists is still there
-
         # Satisfied, he goes back to sleep
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # Roark starts a new to-do list
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('add_new_item')
+        inputbox.send_keys('watch one piece anime')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_id_list_table('1. watch one piece anime')
+
+        # he notices that her list has a unique URL
+        roark_list_url = self.browser.current_url
+        self.assertRegex(roark_list_url, '/lists/.+')
+
+        # now a new user, rand comes along to the site.
+
+        ## we use a new browser session to make sure that
+        ## no information of roark is coming through from
+        ## cookies etc
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # rand visits the home page. There is no sign of roark's
+        # list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('watch one piece anime', page_text)
+
+        # rand starts a new list by entering a new line. She
+        # is less interesting than roark...
+        inputbox = self.browser.find_element_by_id('add_new_item')
+        inputbox.send_keys('buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_id_list_table('1. buy milk')
+
+        # rand gets his own unique url
+        rand_list_url = self.browser.current_url
+        self.assertRegex(rand_list_url, '/lists/.+')
+        self.assertNotEqual(roark_list_url, rand_list_url)
+
+        # again, there is no trace of roarks list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertIn('buy milk', page_text)
+        self.assertNotIn('watch one piece anime', page_text)
+
+        # satisfied they both go back to sleep
+
+
 
