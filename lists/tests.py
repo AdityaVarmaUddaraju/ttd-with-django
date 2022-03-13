@@ -1,3 +1,4 @@
+from urllib import response
 from django.test import TestCase, Client
 from django.urls import resolve
 from django.http import HttpRequest
@@ -23,15 +24,23 @@ class HomePageTest(TestCase):
     def test_redirect_after_post(self):
         response = self.client.post('/lists/',data={'item_text': 'a new list item'})
         self.assertEqual(response.status_code, 302)
-    
-    def test_multiple_items_in_list(self):
+        self.assertEqual(response['location'], '/lists/only-list/')
+
+
+class ListViewTest(TestCase):
+    def test_display_all_items(self):
         Item.objects.create(text='item1')
         Item.objects.create(text='item2')
 
-        response = self.client.get('/lists/')
+        response = self.client.get('/lists/only-list/')
 
-        self.assertIn('1. item1', response.content.decode())
-        self.assertIn('2. item2', response.content.decode())
+        self.assertContains(response, 'item1')
+        self.assertContains(response, 'item2')   
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/only-list/')
+        self.assertTemplateUsed(response, 'lists/list.html')     
+
 
 
 class ItemModelTest(TestCase):

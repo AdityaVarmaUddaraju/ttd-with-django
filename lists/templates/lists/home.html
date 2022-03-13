@@ -1,13 +1,9 @@
 <title>To-Do App</title>
-<h1>To-Do App</h1>
+<h1>Start a new To-Do list</h1>
 
-<form method="post">
+<form method="POST">
     <input type="text" id="add_new_item" name="item_text" placeholder="Enter a to-do item">
     {% csrf_token %}
 </form>
 
-<table id="id_list_table">
-    {% for item in item_list%}
-    <tr><td>{{ forloop.counter }}. {{ item.text }}</td></tr>
-    {% endfor %}
-</table>
+

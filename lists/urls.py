@@ -1,10 +1,12 @@
 from unicodedata import name
 from django.urls import path
 
-from .views import home_page
+from .views import home_page, lists_page
 
 app_name = 'lists'
 
 urlpatterns = [
-    path('', home_page, name='home_page')
+    path('', home_page, name='home_page'),
+    path('only-list/', lists_page, name='lists_page')
+
 ]
