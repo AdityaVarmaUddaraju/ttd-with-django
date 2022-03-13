@@ -6,13 +6,18 @@ from .models import Item, List
 def home_page(request):
     return render(request, 'lists/home.html')
 
-def lists_page(request):
-    item_list = Item.objects.all()
+def lists_page(request, id):
+    list_ = List.objects.get(id=id)
     return render(request, 'lists/list.html', {
-        'item_list':item_list
+        'list':list_
     })
 
 def new_list(request):
     list_ = List.objects.create()
     Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect('/lists/only-list/')
+    return redirect(f'/lists/{list_.id}/')
+
+def add_item(request, id):
+    list_ = List.objects.get(id=id)
+    Item.objects.create(text=request.POST['item_text'], list=list_)
+    return redirect(f'/lists/{list_.id}/')
