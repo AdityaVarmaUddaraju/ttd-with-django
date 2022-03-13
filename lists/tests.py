@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 from django.urls import resolve
 from django.http import HttpRequest
 
-from .models import Item
+from .models import Item, List
 
 from .views import home_page
 # Create your tests here.
@@ -18,8 +18,9 @@ class HomePageTest(TestCase):
 
 class ListViewTest(TestCase):
     def test_display_all_items(self):
-        Item.objects.create(text='item1')
-        Item.objects.create(text='item2')
+        list_ = List.objects.create()
+        Item.objects.create(text='item1', list=list_)
+        Item.objects.create(text='item2', list=list_)
 
         response = self.client.get('/lists/only-list/')
 
@@ -32,15 +33,23 @@ class ListViewTest(TestCase):
 
 
 
-class ItemModelTest(TestCase):
+class ListAndItemModelTest(TestCase):
     def test_saving_and_retrieving_items(self):
+        list_ = List()
+        list_.save()
+        
         item1 = Item()
         item1.text = 'first item'
+        item1.list = list_
         item1.save()
 
         item2 = Item()
         item2.text = "second item"
+        item2.list = list_
         item2.save()
+
+        saved_list = List.objects.first()
+        self.assertEqual(saved_list, list_)
 
         total_items = Item.objects.all()
         self.assertEqual(total_items.count(), 2)
@@ -49,7 +58,9 @@ class ItemModelTest(TestCase):
         second_item = total_items[1]
 
         self.assertEqual(first_item.text, 'first item')
+        self.assertEqual(first_item.list, list_)
         self.assertEqual(second_item.text, 'second item')
+        self.assertEqual(second_item.list, list_)
 
 class NewListTest(TestCase):
     def test_can_save_a_POST_request(self):
