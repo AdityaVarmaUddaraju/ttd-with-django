@@ -125,15 +125,16 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.browser.set_window_size(1024, 768)
 
         # he notices that input box is nicely centered
-        # inputbox = self.browser.find_element_by_id('add_new_item')
-        # inputbox.send_keys('testing')
-        # inputbox.send_keys(Keys.ENTER)
-        # self.wait_for_row_in_id_list_table('1. testing')
-        # self.assertAlmostEquals(
-        #     inputbox.location['x'] + inputbox.size['width'] / 2,
-        #     512,
-        #     delta=10
-        # )
+        inputbox = self.browser.find_element_by_id('add_new_item')
+        inputbox.send_keys('testing')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_id_list_table('1. testing')
+        inputbox = self.browser.find_element_by_id('add_new_item')
+        self.assertAlmostEquals(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        )
 
 
 

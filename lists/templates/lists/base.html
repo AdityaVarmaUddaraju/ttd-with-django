@@ -7,14 +7,16 @@
         <!-- Bootstrap CSS -->
         <link href="/static/lists/bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <link href="/static/lists/base.css" rel="stylesheet">
+        <script src="/static/lists/bootstrap/js/bootstrap.min.js"></script>
     
         <title>To-Do App</title>
       </head>
       <body>
+        <div class="jumbotron">
         <div class="container">
-    
           <div class="row">
-            <div class="col-md-6 col-md-offset-3 jumbotron">
+
+            <div class="col-md-12 col-md-offset-6">
               <div class="text-center">
                 <h1>{% block header_text %}{% endblock %}</h1>
                 <form method="POST" action="{% block form_action %}{% endblock %}">
@@ -32,8 +34,7 @@
               {% block table %}
               {% endblock %}
             </div>
-          </div>
-    
+        </div>
         </div>
       </body>
 </html>
